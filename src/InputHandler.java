@@ -1,3 +1,5 @@
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -6,11 +8,13 @@ import javax.swing.JPanel;
 public class InputHandler {
     private int mouseX, mouseY;
     private boolean mouseClicked;
+    private boolean dashPressed;
     private final JPanel gamePanel;
     
     public InputHandler(JPanel gamePanel) {
         this.gamePanel = gamePanel;
         this.mouseClicked = false;
+        this.dashPressed = false;
     }
     
     public void addListeners() {
@@ -30,6 +34,25 @@ public class InputHandler {
                 mouseY = e.getY();
             }
         });
+        
+        gamePanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                    dashPressed = true;
+                }
+            }
+            
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+                    dashPressed = false;
+                }
+            }
+        });
+        
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
     }
     
     public int getMouseX() {
@@ -46,5 +69,13 @@ public class InputHandler {
     
     public void setMouseClicked(boolean clicked) {
         this.mouseClicked = clicked;
+    }
+    
+    public boolean isDashPressed() {
+        return dashPressed;
+    }
+    
+    public void setDashPressed(boolean pressed) {
+        this.dashPressed = pressed;
     }
 }
