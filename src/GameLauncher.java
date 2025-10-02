@@ -1,3 +1,7 @@
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class GameLauncher {
@@ -12,16 +16,29 @@ public class GameLauncher {
         frame.add(selection);
         frame.pack();
         frame.setLocationRelativeTo(null);
+        try {
+            Image cursorImage = ImageIO.read(new File("./assets/ui/ic_cursor.png"));
+            Cursor customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(0, 0), "hand");
+            frame.setCursor(customCursor);
+        } catch (IOException e) {
+        }
         frame.setVisible(true);
+
+
     }
     
-    private void onCharacterSelected(int skinId) {
+    private void onCharacterSelected(int skinId, String playerName) {
         frame.getContentPane().removeAll();
-        Game game = new Game(skinId);
-        frame.add(game);
+        
+        OnlineGame onlineGame = new OnlineGame(skinId, playerName);
+        frame.add(onlineGame);
+        
         frame.revalidate();
         frame.repaint();
-        game.requestFocus();
+        Component[] components = frame.getContentPane().getComponents();
+        if (components.length > 0) {
+            components[0].requestFocus();
+        }
     }
     
     public static void main(String[] args) {
